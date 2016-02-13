@@ -415,6 +415,20 @@ public:
     }
 
     /**
+     * Specified whether magical unicorn powers are enabled or not.
+	 * Defaults to disabled.
+     */
+    void setRainbow(bool value) {
+        _rainbow = value;
+    }
+    /**
+     * Returns true if magical unicorn powers are enabled.
+     */
+    bool rainbow() const {
+        return _rainbow;
+    }
+
+    /**
      * Sets whether or not the current height and width of the
      * terminal in lines and columns is displayed whilst the widget
      * is being resized.
@@ -800,6 +814,7 @@ private:
     int  _fontWidth;     // width
     int  _fontAscent;     // ascend
     bool _boldIntense;   // Whether intense colors should be rendered with bold font
+    bool _rainbow;       // Whether are we a magical unicorn
 
     int _leftMargin;    // offset
     int _topMargin;    // offset

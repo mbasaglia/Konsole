@@ -327,6 +327,7 @@ TerminalDisplay::TerminalDisplay(QWidget* parent)
     , _fontWidth(1)
     , _fontAscent(1)
     , _boldIntense(true)
+    , _rainbow(false)
     , _lines(1)
     , _columns(1)
     , _usedLines(1)
@@ -1488,6 +1489,7 @@ void TerminalDisplay::drawContents(QPainter& paint, const QRect& rect)
             const quint8 currentRendition = _image[loc(x, y)].rendition;
 
             while (x + len <= rlx &&
+                    !_rainbow &&
                     _image[loc(x + len, y)].foregroundColor == currentForeground &&
                     _image[loc(x + len, y)].backgroundColor == currentBackground &&
                     (_image[loc(x + len, y)].rendition & ~RE_EXTENDED_CHAR) == (currentRendition & ~RE_EXTENDED_CHAR) &&
@@ -1554,6 +1556,15 @@ void TerminalDisplay::drawContents(QPainter& paint, const QRect& rect)
             //painting does actually start from textArea.topLeft()
             //(instead of textArea.topLeft() * painter-scale)
             textArea.moveTopLeft(textScale.inverted().map(textArea.topLeft()));
+
+            if ( _rainbow ) {
+                qreal hue = qreal(x) / _usedColumns;
+                qreal offset = sin(qreal(y) / _usedLines * M_PI * 2) + 1;
+                qreal factor = fmod(hue + offset, 1);
+                _image[loc(x, y)].foregroundColor =
+                    CharacterColor(COLOR_SPACE_RGB,
+                                   QColor::fromHsvF(factor, 0.7, 1).rgba());
+            }
 
             //paint text fragment
             if (_printerFriendly) {

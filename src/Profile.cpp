@@ -78,6 +78,7 @@ const Profile::PropertyInfo Profile::DefaultPropertyNames[] = {
     , { AntiAliasFonts, "AntiAliasFonts" , APPEARANCE_GROUP , QVariant::Bool }
     , { BoldIntense, "BoldIntense", APPEARANCE_GROUP, QVariant::Bool }
     , { LineSpacing , "LineSpacing" , APPEARANCE_GROUP , QVariant::Int }
+    , { Rainbow, "Rainbow", APPEARANCE_GROUP, QVariant::Bool }
 
     // Keyboard
     , { KeyBindings , "KeyBindings" , KEYBOARD_GROUP , QVariant::String }
@@ -195,6 +196,7 @@ FallbackProfile::FallbackProfile()
     setProperty(DefaultEncoding, QString(QTextCodec::codecForLocale()->name()));
     setProperty(AntiAliasFonts, true);
     setProperty(BoldIntense, true);
+    setProperty(Rainbow, false);
 
     setProperty(WordCharacters, ":@-./_~?&=%+#");
 

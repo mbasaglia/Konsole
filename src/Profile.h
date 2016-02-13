@@ -248,7 +248,10 @@ public:
         /** (bool) If true, mouse wheel scroll with Ctrl key pressed
          * increases/decreases the terminal font size.
          */
-        MouseWheelZoomEnabled
+        MouseWheelZoomEnabled,
+		/** (bool) Whether characters have rainbow powers
+		 */
+		Rainbow
     };
 
     /**
@@ -473,6 +476,11 @@ public:
     /** Convenience method for property<bool>(Profile::BoldIntense) */
     bool boldIntense() const {
         return property<bool>(Profile::BoldIntense);
+    }
+
+    /** Convenience method for property<bool>(Profile::Rainbow) */
+    bool rainbow() const {
+        return property<bool>(Profile::Rainbow);
     }
 
     /** Convenience method for property<bool>(Profile::StartInCurrentSessionDir) */
