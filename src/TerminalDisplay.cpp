@@ -1489,7 +1489,7 @@ void TerminalDisplay::drawContents(QPainter& paint, const QRect& rect)
             const quint8 currentRendition = _image[loc(x, y)].rendition;
 
             while (x + len <= rlx &&
-                    !_rainbow &&
+                    (!_rainbow || (_image[loc(x + len, y)].isSpace() && !_screenWindow->isSelected(x, y)) ) &&
                     _image[loc(x + len, y)].foregroundColor == currentForeground &&
                     _image[loc(x + len, y)].backgroundColor == currentBackground &&
                     (_image[loc(x + len, y)].rendition & ~RE_EXTENDED_CHAR) == (currentRendition & ~RE_EXTENDED_CHAR) &&
@@ -1558,12 +1558,24 @@ void TerminalDisplay::drawContents(QPainter& paint, const QRect& rect)
             textArea.moveTopLeft(textScale.inverted().map(textArea.topLeft()));
 
             if ( _rainbow ) {
-                qreal hue = qreal(x) / _usedColumns;
-                qreal offset = sin(qreal(y) / _usedLines * M_PI * 2) + 1;
-                qreal factor = fmod(hue + offset, 1);
-                _image[loc(x, y)].foregroundColor =
-                    CharacterColor(COLOR_SPACE_RGB,
-                                   QColor::fromHsvF(factor, 0.7, 1).rgba());
+                qreal rel_x = qreal(x) / _usedColumns;
+                qreal rel_y = qreal(y) / _usedLines;
+                qreal offset = sin(rel_y* M_PI * 2) + 1;
+                qreal hue = fmod(rel_x + offset, 1);
+
+
+                if ( _screenWindow->isSelected(x, y) ) {
+                    _image[loc(x, y)].backgroundColor =
+                        CharacterColor(COLOR_SPACE_RGB,
+                            QColor::fromHsvF(hue, 0.7, 0.8).rgba());
+                    _image[loc(x, y)].foregroundColor =
+                        CharacterColor(COLOR_SPACE_RGB, 0x191919);
+                }
+                else {
+                    _image[loc(x, y)].foregroundColor =
+                        CharacterColor(COLOR_SPACE_RGB,
+                            QColor::fromHsvF(hue, 0.7, 1).rgba());
+                }
             }
 
             //paint text fragment
